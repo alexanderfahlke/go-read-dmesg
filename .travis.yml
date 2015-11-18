@@ -1,0 +1,35 @@
+language: go
+
+sudo: false
+
+go:
+  - 1.3
+  - 1.4
+  - 1.5
+  - tip
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - go: tip
+
+notifications:
+  email:
+    recipients:
+    - alexander.fahlke+travis-ci@gmail.com
+    on_success: never
+    on_failure: change
+
+before_install:
+  - go get github.com/mattn/goveralls
+  - go get github.com/axw/gocov/gocov
+  - go get golang.org/x/tools/cmd/cover
+
+before_script:
+  - go vet ./...
+
+script:
+  - make test testrace
+
+after_success:
+  - make coverage
